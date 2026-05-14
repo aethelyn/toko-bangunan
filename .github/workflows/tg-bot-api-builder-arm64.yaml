@@ -1,0 +1,220 @@
+name: Build Telegram Bot API (ARM64)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-jemalloc:
+    name: "Dep: jemalloc"
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Install tools
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y --no-install-recommends \
+            build-essential curl autoconf libtool automake
+
+      - name: Build jemalloc
+        run: |
+          mkdir -p /tmp/jemalloc && cd /tmp/jemalloc
+          curl -sSL https://github.com/jemalloc/jemalloc/releases/download/5.3.1/jemalloc-5.3.1.tar.bz2 \
+            -o jemalloc.tar.bz2
+          tar --strip-components=1 -xjf jemalloc.tar.bz2
+          ./configure --disable-shared --enable-static --with-pic
+          make -j$(nproc)
+          make DESTDIR=/tmp/jemalloc-out install
+
+      - name: Upload libjemalloc artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: dep-jemalloc
+          path: /tmp/jemalloc-out/usr/local/
+          retention-days: 1
+
+  build-zlib:
+    name: "Dep: zlib"
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Install tools
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y --no-install-recommends \
+            build-essential curl
+
+      - name: Build zlib
+        run: |
+          mkdir -p /tmp/zlib && cd /tmp/zlib
+          curl -sSL https://github.com/madler/zlib/releases/download/v1.3.2/zlib-1.3.2.tar.gz \
+            -o zlib.tar.gz
+          tar --strip-components=1 -xzf zlib.tar.gz
+          ./configure --static --prefix=/usr/local
+          make -j$(nproc)
+          make DESTDIR=/tmp/zlib-out install
+
+      - name: Upload libz artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: dep-zlib
+          path: /tmp/zlib-out/usr/local/
+          retention-days: 1
+
+  build-openssl:
+    name: "Dep: OpenSSL"
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Install tools
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y --no-install-recommends \
+            build-essential curl perl
+
+      - name: Build OpenSSL
+        run: |
+          mkdir -p /tmp/openssl && cd /tmp/openssl
+          curl -sSL https://github.com/openssl/openssl/releases/download/openssl-4.0.0/openssl-4.0.0.tar.gz \
+            -o openssl.tar.gz
+          tar --strip-components=1 -xzf openssl.tar.gz
+          ./Configure linux-aarch64 \
+            no-shared no-dso no-hw no-engine no-async no-tests no-pinshared \
+            -fPIC -static \
+            --prefix=/usr/local \
+            --openssldir=/etc/ssl
+          make -j$(nproc)
+          make DESTDIR=/tmp/openssl-out install_sw
+
+      - name: Upload libssl artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: dep-openssl
+          path: /tmp/openssl-out/usr/local/
+          retention-days: 1
+
+  build:
+    name: "Build telegram-bot-api"
+    runs-on: ubuntu-24.04-arm
+    needs: [build-jemalloc, build-zlib, build-openssl]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install build tools
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y --no-install-recommends \
+            git cmake ninja-build make gperf \
+            build-essential linux-headers-generic \
+            binutils curl autoconf libtool automake \
+            sed perl
+
+      - name: Download dep artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: dep-*
+          path: /tmp/deps-dl
+          merge-multiple: false
+
+      - name: Install deps to /usr/local
+        run: |
+          for dep in jemalloc zlib openssl; do
+            sudo cp -r /tmp/deps-dl/dep-${dep}/. /usr/local/
+          done
+          sudo ldconfig
+
+      - name: Clone telegram-bot-api
+        run: |
+          git clone --recursive --depth=1 \
+            https://github.com/tdlib/telegram-bot-api.git /tmp/src
+
+      - name: Configure CMake
+        working-directory: /tmp/src
+        env:
+          CFLAGS: >-
+            -Os -flto -ffunction-sections -fdata-sections -fomit-frame-pointer
+            -fno-stack-protector -mcpu=neoverse-n1 -march=armv8.2-a
+            -DNDEBUG -DTD_HAVE_ATOMIC=1
+          CXXFLAGS: >-
+            -Os -flto -ffunction-sections -fdata-sections -fomit-frame-pointer
+            -fno-stack-protector -mcpu=neoverse-n1 -march=armv8.2-a
+            -DNDEBUG -DTD_HAVE_ATOMIC=1
+            -fno-rtti -fno-exceptions -fvisibility-inlines-hidden -std=c++17
+          LDFLAGS: >-
+            -static -flto -Wl,--gc-sections -Wl,--strip-all -Wl,--as-needed
+            -Wl,-z,norelro -Wl,-z,now -Wl,--build-id=none
+            -L/usr/local/lib -lssl -lcrypto -ldl -lpthread -lz -ljemalloc
+        run: |
+          mkdir -p build && cd build
+          cmake .. \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_FLAGS="$CFLAGS" \
+            -DCMAKE_CXX_FLAGS="$CXXFLAGS" \
+            -DCMAKE_EXE_LINKER_FLAGS="$LDFLAGS" \
+            -DCMAKE_FIND_LIBRARY_SUFFIXES=".a" \
+            -DZLIB_LIBRARY=/usr/local/lib/libz.a \
+            -DZLIB_INCLUDE_DIR=/usr/local/include \
+            -DOPENSSL_CRYPTO_LIBRARY=/usr/local/lib/libcrypto.a \
+            -DOPENSSL_SSL_LIBRARY=/usr/local/lib/libssl.a \
+            -DOPENSSL_INCLUDE_DIR=/usr/local/include \
+            -DOPENSSL_USE_STATIC_LIBS=TRUE \
+            -DJEMALLOC_LIBRARY=/usr/local/lib/libjemalloc.a \
+            -DJEMALLOC_INCLUDE_DIR=/usr/local/include \
+            -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
+            -DCMAKE_POLICY_DEFAULT_CMP0069=NEW \
+            -DBUILD_SHARED_LIBS=OFF
+
+      - name: Build telegram-bot-api
+        working-directory: /tmp/src/build
+        run: ninja -j$(nproc) telegram-bot-api
+
+      - name: Strip and package binary
+        working-directory: /tmp/src/build
+        run: |
+          strip --strip-all telegram-bot-api
+          tar czf telegram-bot-api-linux-arm64.tar.gz telegram-bot-api
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: telegram-bot-api-linux-arm64
+          path: /tmp/src/build/telegram-bot-api-linux-arm64.tar.gz
+          retention-days: 30
+
+      - name: Generate release tag
+        if: github.event_name != 'pull_request'
+        id: tag
+        run: |
+          DATE=$(date +'%d-%m-%Y')
+          echo "tag=automated-build-${DATE}" >> $GITHUB_OUTPUT
+          echo "name=Automated build ${DATE}" >> $GITHUB_OUTPUT
+
+      - name: Delete existing release & tag (jika tanggal sama)
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ steps.tag.outputs.tag }}"
+          gh release delete "$TAG" --repo "$GITHUB_REPOSITORY" --yes 2>/dev/null || true
+          git push origin ":refs/tags/${TAG}" 2>/dev/null || true
+
+      - name: Create tag
+        if: github.event_name != 'pull_request'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag "${{ steps.tag.outputs.tag }}"
+          git push origin "${{ steps.tag.outputs.tag }}"
+
+      - name: Create GitHub Release
+        if: github.event_name != 'pull_request'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: ${{ steps.tag.outputs.name }}
+          body: |
+            ### Automated Build — ${{ steps.tag.outputs.name }}
+          files: /tmp/src/build/telegram-bot-api-linux-arm64.tar.gz
+          make_latest: true

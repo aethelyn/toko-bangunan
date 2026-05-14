@@ -1,0 +1,58 @@
+name: Build & Push Chiseled Base Image
+
+on:
+  schedule:
+    - cron: '0 0 * * 1' 
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ubuntu26-chiseled
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Login to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install chisel
+        run: |
+          curl -fsSL \
+            https://github.com/canonical/chisel/releases/download/v1.4.1/chisel_v1.4.1_linux_amd64.tar.gz \
+            | tar -xz -C /usr/local/bin/ chisel
+
+      - name: Cut rootfs
+        run: |
+          mkdir rootfs
+          sudo chisel cut \
+            --release ubuntu-26.04 \
+            --root rootfs/ \
+            base-files_base \
+            base-files_release-info \
+            libc6_libs \
+            libgcc-s1_libs \
+            ca-certificates_data \
+            tzdata_zoneinfo
+
+      - name: Push to GHCR
+        run: |
+          IMAGE="${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}"
+          SHA_TAG="sha-$(git rev-parse --short HEAD)"
+
+          sudo tar -C rootfs -c . | docker import - "${IMAGE}:${SHA_TAG}"
+          docker tag "${IMAGE}:${SHA_TAG}" "${IMAGE}:latest"
+
+          docker push "${IMAGE}:${SHA_TAG}"
+          docker push "${IMAGE}:latest"
