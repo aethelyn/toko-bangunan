@@ -25,7 +25,6 @@ jobs:
           mkdir -p work/data
           for L in pro ultimate; do
             curl -fL "$BASE/$L-onlydomains.txt" \
-
               | grep -v '^#' | tr 'A-Z' 'a-z' \
               | grep -E '^[a-z0-9.-]+$' | sort -u > "work/data/hagezi-$L"
           done
