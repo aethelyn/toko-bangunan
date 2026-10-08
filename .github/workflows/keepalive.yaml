@@ -1,0 +1,14 @@
+name: Keepalive API
+
+on:
+  schedule:
+   - cron: '0 0 1,16 * *'
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Keepalive via API
+        uses: liskin/gh-workflow-keepalive@v1
