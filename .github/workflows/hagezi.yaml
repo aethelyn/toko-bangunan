@@ -1,0 +1,74 @@
+name: Build hagezi geosite
+
+on:
+  schedule:
+    - cron: "15 */8 * * *"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Force a release even if the hash is unchanged"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+env:
+  TAG: latest
+  BASE: https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download and clean lists
+        run: |
+          mkdir -p work/data
+          for L in pro ultimate; do
+            curl -fL "$BASE/$L-onlydomains.txt" \
+              | grep -v '^#' | tr 'A-Z' 'a-z' \
+              | grep -E '^[a-z0-9.-]+$' | sort -u > "work/data/hagezi-$L"
+          done
+          # Hash the cleaned content, not the raw file: the upstream header
+          # contains "Last modified", which would change on every run.
+          cat work/data/hagezi-* | sha256sum | cut -d' ' -f1 > work/sha.txt
+          echo "NEW_SHA=$(cat work/sha.txt)" >> "$GITHUB_ENV"
+
+      - name: Compare with the last release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          OLD=""
+          if gh release download "$TAG" -R "$GITHUB_REPOSITORY" -p sha.txt -O old_sha.txt 2>/dev/null; then
+            OLD=$(cat old_sha.txt)
+          fi
+          echo "old=$OLD new=$NEW_SHA"
+          if [ "$OLD" = "$NEW_SHA" ] && [ "${{ inputs.force }}" != "true" ]; then
+            echo "SKIP=true" >> "$GITHUB_ENV"
+            echo "Hash unchanged, skipping build and release."
+          fi
+
+      - uses: actions/setup-go@v5
+        if: env.SKIP != 'true'
+        with:
+          go-version: stable
+
+      - name: Build hagezi.dat
+        if: env.SKIP != 'true'
+        run: |
+          git clone --depth 1 https://github.com/v2fly/domain-list-community
+          cp work/data/hagezi-* domain-list-community/data/
+          cd domain-list-community
+          go run ./ --datapath=./data --outputdir=../work --outputname=hagezi.dat
+          cd ../work
+          sha256sum hagezi.dat > hagezi.dat.sha256sum
+
+      - name: Upload to release
+        if: env.SKIP != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "$TAG" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1 \
+            || gh release create "$TAG" -R "$GITHUB_REPOSITORY" -t "hagezi geosite" -n "Auto-build"
+          gh release upload "$TAG" -R "$GITHUB_REPOSITORY" --clobber \
+            work/hagezi.dat work/hagezi.dat.sha256sum work/sha.txt
