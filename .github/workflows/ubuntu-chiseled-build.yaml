@@ -9,6 +9,8 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ubuntu26-chiseled
 
+permissions: {}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -56,3 +58,13 @@ jobs:
 
           docker push "${IMAGE}:${SHA_TAG}"
           docker push "${IMAGE}:latest"
+
+  workflow-keepalive:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Prevent suspension due to inactivity
+        uses: liskin/gh-workflow-keepalive@v1
+        
