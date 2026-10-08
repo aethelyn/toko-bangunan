@@ -10,9 +10,6 @@ on:
         type: boolean
         default: false
 
-permissions:
-  contents: write
-
 env:
   TAG: latest
   BASE: https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard
@@ -20,12 +17,15 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Download and clean lists
         run: |
           mkdir -p work/data
           for L in pro ultimate; do
             curl -fL "$BASE/$L-onlydomains.txt" \
+
               | grep -v '^#' | tr 'A-Z' 'a-z' \
               | grep -E '^[a-z0-9.-]+$' | sort -u > "work/data/hagezi-$L"
           done
@@ -72,3 +72,13 @@ jobs:
             || gh release create "$TAG" -R "$GITHUB_REPOSITORY" -t "hagezi geosite" -n "Auto-build"
           gh release upload "$TAG" -R "$GITHUB_REPOSITORY" --clobber \
             work/hagezi.dat work/hagezi.dat.sha256sum work/sha.txt
+
+
+  workflow-keepalive:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Prevent suspension due to inactivity
+        uses: liskin/gh-workflow-keepalive@v1
