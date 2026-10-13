@@ -1,0 +1,46 @@
+name: Canary PIF Generator
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-pif:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run PIF Generator
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+          THREAD_ID: ${{ secrets.THREAD_ID }}
+          FORCE_SPECIFIC_DEVICE: ${{ vars.FORCE_SPECIFIC_DEVICE }}
+          FORCED_DEVICE_MODEL: ${{ vars.FORCED_DEVICE_MODEL }}
+        run: node scripts/pif.mjs
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      
+          git add -A pif.json pif.prop sdk_map.json pif/
+      
+          if git diff --staged --quiet; then
+            echo "[INFO] No changes detected in PIF profile. Nothing to commit."
+          else
+            git commit -m "chore(pif): update canary profiles for all devices [skip ci]"
+            git push
+            echo "[SUCCESS] New PIF profiles successfully committed to repository."
+          fi
