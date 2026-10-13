@@ -1,320 +1,305 @@
 {
-  "updated_at": "2026-10-13T17:30:00.412Z",
-  "total_devices": 21,
+  "updated_at": "2026-10-13T17:31:35.756Z",
+  "total_devices": 20,
   "devices": [
     {
-      "model": "Pixel 6",
+      "model": "Google Pixel 6",
       "codename": "oriole",
       "product": "oriole_beta",
-      "version_release": "17",
+      "version_release": "16",
       "security_patch": "2026-08-05",
       "initial_sdk": 31,
       "fingerprint": "google/oriole_beta/oriole:CANARY/ZP11.260717.006/16004061:user/release-keys",
       "files": {
-        "named_json": "pif/Pixel_6_oriole.json",
-        "named_prop": "pif/Pixel_6_oriole.prop",
+        "named_json": "pif/Google_Pixel_6_oriole.json",
+        "named_prop": "pif/Google_Pixel_6_oriole.prop",
         "codename_json": "pif/oriole.json",
         "codename_prop": "pif/oriole.prop"
       }
     },
     {
-      "model": "Pixel 6 Pro",
+      "model": "Google Pixel 6 Pro",
       "codename": "raven",
       "product": "raven_beta",
-      "version_release": "17",
+      "version_release": "16",
       "security_patch": "2026-08-05",
       "initial_sdk": 31,
       "fingerprint": "google/raven_beta/raven:CANARY/ZP11.260717.006/16004061:user/release-keys",
       "files": {
-        "named_json": "pif/Pixel_6_Pro_raven.json",
-        "named_prop": "pif/Pixel_6_Pro_raven.prop",
+        "named_json": "pif/Google_Pixel_6_Pro_raven.json",
+        "named_prop": "pif/Google_Pixel_6_Pro_raven.prop",
         "codename_json": "pif/raven.json",
         "codename_prop": "pif/raven.prop"
       }
     },
     {
-      "model": "Pixel 6a",
+      "model": "Google Pixel 6a",
       "codename": "bluejay",
       "product": "bluejay_beta",
-      "version_release": "17",
+      "version_release": "16",
       "security_patch": "2026-08-05",
       "initial_sdk": 31,
       "fingerprint": "google/bluejay_beta/bluejay:CANARY/ZP11.260918.007/16484274:user/release-keys",
       "files": {
-        "named_json": "pif/Pixel_6a_bluejay.json",
-        "named_prop": "pif/Pixel_6a_bluejay.prop",
+        "named_json": "pif/Google_Pixel_6a_bluejay.json",
+        "named_prop": "pif/Google_Pixel_6a_bluejay.prop",
         "codename_json": "pif/bluejay.json",
         "codename_prop": "pif/bluejay.prop"
       }
     },
     {
-      "model": "Pixel 7",
+      "model": "Google Pixel 7",
       "codename": "panther",
       "product": "panther_beta",
-      "version_release": "17",
+      "version_release": "16",
       "security_patch": "2026-08-05",
       "initial_sdk": 33,
       "fingerprint": "google/panther_beta/panther:CANARY/ZP11.260918.007/16484274:user/release-keys",
       "files": {
-        "named_json": "pif/Pixel_7_panther.json",
-        "named_prop": "pif/Pixel_7_panther.prop",
+        "named_json": "pif/Google_Pixel_7_panther.json",
+        "named_prop": "pif/Google_Pixel_7_panther.prop",
         "codename_json": "pif/panther.json",
         "codename_prop": "pif/panther.prop"
       }
     },
     {
-      "model": "Pixel 7 Pro",
+      "model": "Google Pixel 7 Pro",
       "codename": "cheetah",
       "product": "cheetah_beta",
-      "version_release": "17",
+      "version_release": "16",
       "security_patch": "2026-08-05",
       "initial_sdk": 33,
       "fingerprint": "google/cheetah_beta/cheetah:CANARY/ZP11.260918.007/16484274:user/release-keys",
       "files": {
-        "named_json": "pif/Pixel_7_Pro_cheetah.json",
-        "named_prop": "pif/Pixel_7_Pro_cheetah.prop",
+        "named_json": "pif/Google_Pixel_7_Pro_cheetah.json",
+        "named_prop": "pif/Google_Pixel_7_Pro_cheetah.prop",
         "codename_json": "pif/cheetah.json",
         "codename_prop": "pif/cheetah.prop"
       }
     },
     {
-      "model": "Pixel 7a",
+      "model": "Google Pixel 7a",
       "codename": "lynx",
       "product": "lynx_beta",
-      "version_release": "17",
+      "version_release": "16",
       "security_patch": "2026-08-05",
       "initial_sdk": 33,
       "fingerprint": "google/lynx_beta/lynx:CANARY/ZP11.260918.007/16484274:user/release-keys",
       "files": {
-        "named_json": "pif/Pixel_7a_lynx.json",
-        "named_prop": "pif/Pixel_7a_lynx.prop",
+        "named_json": "pif/Google_Pixel_7a_lynx.json",
+        "named_prop": "pif/Google_Pixel_7a_lynx.prop",
         "codename_json": "pif/lynx.json",
         "codename_prop": "pif/lynx.prop"
       }
     },
     {
-      "model": "Pixel Fold",
+      "model": "Google Pixel Fold",
       "codename": "felix",
       "product": "felix_beta",
-      "version_release": "17",
+      "version_release": "16",
       "security_patch": "2026-08-05",
       "initial_sdk": 33,
       "fingerprint": "google/felix_beta/felix:CANARY/ZP11.260918.007/16484274:user/release-keys",
       "files": {
-        "named_json": "pif/Pixel_Fold_felix.json",
-        "named_prop": "pif/Pixel_Fold_felix.prop",
+        "named_json": "pif/Google_Pixel_Fold_felix.json",
+        "named_prop": "pif/Google_Pixel_Fold_felix.prop",
         "codename_json": "pif/felix.json",
         "codename_prop": "pif/felix.prop"
       }
     },
     {
-      "model": "Pixel Tablet",
+      "model": "Google Pixel Tablet",
       "codename": "tangorpro",
       "product": "tangorpro_beta",
-      "version_release": "17",
+      "version_release": "16",
       "security_patch": "2026-08-05",
       "initial_sdk": 36,
       "fingerprint": "google/tangorpro_beta/tangorpro:CANARY/ZP11.260918.007/16484274:user/release-keys",
       "files": {
-        "named_json": "pif/Pixel_Tablet_tangorpro.json",
-        "named_prop": "pif/Pixel_Tablet_tangorpro.prop",
+        "named_json": "pif/Google_Pixel_Tablet_tangorpro.json",
+        "named_prop": "pif/Google_Pixel_Tablet_tangorpro.prop",
         "codename_json": "pif/tangorpro.json",
         "codename_prop": "pif/tangorpro.prop"
       }
     },
     {
-      "model": "Pixel 8",
+      "model": "Google Pixel 8",
       "codename": "shiba",
       "product": "shiba_beta",
-      "version_release": "17",
+      "version_release": "16",
       "security_patch": "2026-08-05",
       "initial_sdk": 34,
       "fingerprint": "google/shiba_beta/shiba:CANARY/ZP11.260918.007/16484274:user/release-keys",
       "files": {
-        "named_json": "pif/Pixel_8_shiba.json",
-        "named_prop": "pif/Pixel_8_shiba.prop",
+        "named_json": "pif/Google_Pixel_8_shiba.json",
+        "named_prop": "pif/Google_Pixel_8_shiba.prop",
         "codename_json": "pif/shiba.json",
         "codename_prop": "pif/shiba.prop"
       }
     },
     {
-      "model": "Pixel 8 Pro",
+      "model": "Google Pixel 8 Pro",
       "codename": "husky",
       "product": "husky_beta",
-      "version_release": "17",
+      "version_release": "16",
       "security_patch": "2026-08-05",
       "initial_sdk": 34,
       "fingerprint": "google/husky_beta/husky:CANARY/ZP11.260918.007/16484274:user/release-keys",
       "files": {
-        "named_json": "pif/Pixel_8_Pro_husky.json",
-        "named_prop": "pif/Pixel_8_Pro_husky.prop",
+        "named_json": "pif/Google_Pixel_8_Pro_husky.json",
+        "named_prop": "pif/Google_Pixel_8_Pro_husky.prop",
         "codename_json": "pif/husky.json",
         "codename_prop": "pif/husky.prop"
       }
     },
     {
-      "model": "Pixel 8a",
+      "model": "Google Pixel 8a",
       "codename": "akita",
       "product": "akita_beta",
-      "version_release": "17",
+      "version_release": "16",
       "security_patch": "2026-08-05",
       "initial_sdk": 34,
       "fingerprint": "google/akita_beta/akita:CANARY/ZP11.260918.007/16484274:user/release-keys",
       "files": {
-        "named_json": "pif/Pixel_8a_akita.json",
-        "named_prop": "pif/Pixel_8a_akita.prop",
+        "named_json": "pif/Google_Pixel_8a_akita.json",
+        "named_prop": "pif/Google_Pixel_8a_akita.prop",
         "codename_json": "pif/akita.json",
         "codename_prop": "pif/akita.prop"
       }
     },
     {
-      "model": "Pixel 9",
+      "model": "Google Pixel 9",
       "codename": "tokay",
       "product": "tokay_beta",
-      "version_release": "17",
+      "version_release": "16",
       "security_patch": "2026-08-05",
       "initial_sdk": 35,
       "fingerprint": "google/tokay_beta/tokay:CANARY/ZP11.260918.007/16484274:user/release-keys",
       "files": {
-        "named_json": "pif/Pixel_9_tokay.json",
-        "named_prop": "pif/Pixel_9_tokay.prop",
+        "named_json": "pif/Google_Pixel_9_tokay.json",
+        "named_prop": "pif/Google_Pixel_9_tokay.prop",
         "codename_json": "pif/tokay.json",
         "codename_prop": "pif/tokay.prop"
       }
     },
     {
-      "model": "Pixel 9 Pro",
+      "model": "Google Pixel 9 Pro",
       "codename": "caiman",
       "product": "caiman_beta",
-      "version_release": "17",
+      "version_release": "16",
       "security_patch": "2026-08-05",
       "initial_sdk": 35,
       "fingerprint": "google/caiman_beta/caiman:CANARY/ZP11.260918.007/16484274:user/release-keys",
       "files": {
-        "named_json": "pif/Pixel_9_Pro_caiman.json",
-        "named_prop": "pif/Pixel_9_Pro_caiman.prop",
+        "named_json": "pif/Google_Pixel_9_Pro_caiman.json",
+        "named_prop": "pif/Google_Pixel_9_Pro_caiman.prop",
         "codename_json": "pif/caiman.json",
         "codename_prop": "pif/caiman.prop"
       }
     },
     {
-      "model": "Pixel 9 Pro XL",
+      "model": "Google Pixel 9 Pro XL",
       "codename": "komodo",
       "product": "komodo_beta",
-      "version_release": "17",
+      "version_release": "16",
       "security_patch": "2026-08-05",
       "initial_sdk": 35,
       "fingerprint": "google/komodo_beta/komodo:CANARY/ZP11.260918.007/16484274:user/release-keys",
       "files": {
-        "named_json": "pif/Pixel_9_Pro_XL_komodo.json",
-        "named_prop": "pif/Pixel_9_Pro_XL_komodo.prop",
+        "named_json": "pif/Google_Pixel_9_Pro_XL_komodo.json",
+        "named_prop": "pif/Google_Pixel_9_Pro_XL_komodo.prop",
         "codename_json": "pif/komodo.json",
         "codename_prop": "pif/komodo.prop"
       }
     },
     {
-      "model": "Pixel 9 Pro Fold",
+      "model": "Google Pixel 9 Pro Fold",
       "codename": "comet",
       "product": "comet_beta",
-      "version_release": "17",
+      "version_release": "16",
       "security_patch": "2026-08-05",
       "initial_sdk": 35,
       "fingerprint": "google/comet_beta/comet:CANARY/ZP11.260918.007/16484274:user/release-keys",
       "files": {
-        "named_json": "pif/Pixel_9_Pro_Fold_comet.json",
-        "named_prop": "pif/Pixel_9_Pro_Fold_comet.prop",
+        "named_json": "pif/Google_Pixel_9_Pro_Fold_comet.json",
+        "named_prop": "pif/Google_Pixel_9_Pro_Fold_comet.prop",
         "codename_json": "pif/comet.json",
         "codename_prop": "pif/comet.prop"
       }
     },
     {
-      "model": "Pixel 9a",
+      "model": "Google Pixel 9a",
       "codename": "tegu",
       "product": "tegu_beta",
-      "version_release": "17",
+      "version_release": "16",
       "security_patch": "2026-08-05",
       "initial_sdk": 35,
       "fingerprint": "google/tegu_beta/tegu:CANARY/ZP11.260918.007/16484274:user/release-keys",
       "files": {
-        "named_json": "pif/Pixel_9a_tegu.json",
-        "named_prop": "pif/Pixel_9a_tegu.prop",
+        "named_json": "pif/Google_Pixel_9a_tegu.json",
+        "named_prop": "pif/Google_Pixel_9a_tegu.prop",
         "codename_json": "pif/tegu.json",
         "codename_prop": "pif/tegu.prop"
       }
     },
     {
-      "model": "Pixel 10",
+      "model": "Google Pixel 10",
       "codename": "frankel",
       "product": "frankel_beta",
-      "version_release": "17",
+      "version_release": "16",
       "security_patch": "2026-08-05",
       "initial_sdk": 36,
       "fingerprint": "google/frankel_beta/frankel:CANARY/ZP11.260918.007/16484274:user/release-keys",
       "files": {
-        "named_json": "pif/Pixel_10_frankel.json",
-        "named_prop": "pif/Pixel_10_frankel.prop",
+        "named_json": "pif/Google_Pixel_10_frankel.json",
+        "named_prop": "pif/Google_Pixel_10_frankel.prop",
         "codename_json": "pif/frankel.json",
         "codename_prop": "pif/frankel.prop"
       }
     },
     {
-      "model": "Pixel 10 Pro",
+      "model": "Google Pixel 10 Pro",
       "codename": "blazer",
       "product": "blazer_beta",
-      "version_release": "17",
+      "version_release": "16",
       "security_patch": "2026-08-05",
       "initial_sdk": 36,
       "fingerprint": "google/blazer_beta/blazer:CANARY/ZP11.260918.007/16484274:user/release-keys",
       "files": {
-        "named_json": "pif/Pixel_10_Pro_blazer.json",
-        "named_prop": "pif/Pixel_10_Pro_blazer.prop",
+        "named_json": "pif/Google_Pixel_10_Pro_blazer.json",
+        "named_prop": "pif/Google_Pixel_10_Pro_blazer.prop",
         "codename_json": "pif/blazer.json",
         "codename_prop": "pif/blazer.prop"
       }
     },
     {
-      "model": "Pixel 10 Pro XL",
+      "model": "Google Pixel 10 Pro XL",
       "codename": "mustang",
       "product": "mustang_beta",
-      "version_release": "17",
+      "version_release": "16",
       "security_patch": "2026-08-05",
       "initial_sdk": 36,
       "fingerprint": "google/mustang_beta/mustang:CANARY/ZP11.260918.007/16484274:user/release-keys",
       "files": {
-        "named_json": "pif/Pixel_10_Pro_XL_mustang.json",
-        "named_prop": "pif/Pixel_10_Pro_XL_mustang.prop",
+        "named_json": "pif/Google_Pixel_10_Pro_XL_mustang.json",
+        "named_prop": "pif/Google_Pixel_10_Pro_XL_mustang.prop",
         "codename_json": "pif/mustang.json",
         "codename_prop": "pif/mustang.prop"
       }
     },
     {
-      "model": "Pixel 10 Pro Fold",
+      "model": "Google Pixel 10 Pro Fold",
       "codename": "rango",
       "product": "rango_beta",
-      "version_release": "17",
+      "version_release": "16",
       "security_patch": "2026-08-05",
       "initial_sdk": 36,
       "fingerprint": "google/rango_beta/rango:CANARY/ZP11.260918.007/16484274:user/release-keys",
       "files": {
-        "named_json": "pif/Pixel_10_Pro_Fold_rango.json",
-        "named_prop": "pif/Pixel_10_Pro_Fold_rango.prop",
+        "named_json": "pif/Google_Pixel_10_Pro_Fold_rango.json",
+        "named_prop": "pif/Google_Pixel_10_Pro_Fold_rango.prop",
         "codename_json": "pif/rango.json",
         "codename_prop": "pif/rango.prop"
-      }
-    },
-    {
-      "model": "Pixel 10a",
-      "codename": "stallion",
-      "product": "stallion_beta",
-      "version_release": "17",
-      "security_patch": "2026-08-05",
-      "initial_sdk": 36,
-      "fingerprint": "google/stallion_beta/stallion:CANARY/ZP11.260918.007/16484274:user/release-keys",
-      "files": {
-        "named_json": "pif/Pixel_10a_stallion.json",
-        "named_prop": "pif/Pixel_10a_stallion.prop",
-        "codename_json": "pif/stallion.json",
-        "codename_prop": "pif/stallion.prop"
       }
     }
   ]

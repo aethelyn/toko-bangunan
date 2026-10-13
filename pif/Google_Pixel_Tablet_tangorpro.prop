@@ -1,0 +1,10 @@
+MANUFACTURER=Google
+MODEL=Google Pixel Tablet
+FINGERPRINT=google/tangorpro_beta/tangorpro:CANARY/ZP11.260918.007/16484274:user/release-keys
+BRAND=google
+PRODUCT=tangorpro_beta
+DEVICE=tangorpro
+VERSION_RELEASE=16
+ID=ZP11.260918.007
+SECURITY_PATCH=2026-08-05
+DEVICE_INITIAL_SDK_INT=36
