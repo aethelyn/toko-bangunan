@@ -6,6 +6,7 @@ const PIF_JSON_PATH = path.resolve("pif.json");
 const PIF_PROP_PATH = path.resolve("pif.prop");
 const PIF_DIR = path.resolve("pif");
 const PIF_INDEX_PATH = path.join(PIF_DIR, "index.json");
+const ROOT_INDEX_PATH = path.resolve("index.json");
 const PIF_README_PATH = path.join(PIF_DIR, "README.md");
 const SDK_MAP_PATH = path.resolve("sdk_map.json");
 
@@ -163,7 +164,10 @@ async function main() {
       throw new Error("Unable to obtain Google Flash Tool API Key.");
     }
 
-    console.log("[INFO] Ensuring 'pif' directory exists and cleaning legacy directories...");
+    console.log("[INFO] Ensuring 'pif' directory is fresh and cleaning legacy files...");
+    if (existsSync(PIF_DIR)) {
+      await rm(PIF_DIR, { recursive: true, force: true });
+    }
     await mkdir(PIF_DIR, { recursive: true });
 
     // Clean up legacy devices directory or pif_all.json if exists
@@ -172,6 +176,11 @@ async function main() {
     }
     if (existsSync(path.resolve("pif_all.json"))) {
       await rm(path.resolve("pif_all.json"), { force: true });
+    }
+    // Hapus file index.html jika pernah terbuat sebelumnya
+    const legacyRootHtml = path.resolve("index.html");
+    if (existsSync(legacyRootHtml)) {
+      await rm(legacyRootHtml, { force: true });
     }
 
     console.log(`[INFO] Processing all ${modelList.length} devices found...`);
@@ -233,21 +242,11 @@ async function main() {
           `DEVICE_INITIAL_SDK_INT=${initialSdk}`
         ].join("\n");
 
-        const cleanModel = curModel.replace(/\s+/g, "_");
-        const namedFileBase = `${cleanModel}_${curDevice}`;
-
-        // 1. Full model name + codename (e.g., Pixel_9_Pro_XL_komodo.json)
-        await writeFile(path.join(PIF_DIR, `${namedFileBase}.json`), JSON.stringify(devJsonObj, null, 2) + "\n", "utf-8");
-        await writeFile(path.join(PIF_DIR, `${namedFileBase}.prop`), devPropContent + "\n", "utf-8");
-
-        // 2. Pure codename alias (e.g., komodo.json)
+        // Simpan 1 set file per device menggunakan codename resmi (e.g. mustang.json & mustang.prop)
         await writeFile(path.join(PIF_DIR, `${curDevice}.json`), JSON.stringify(devJsonObj, null, 2) + "\n", "utf-8");
         await writeFile(path.join(PIF_DIR, `${curDevice}.prop`), devPropContent + "\n", "utf-8");
 
-        allProfiles.push({
-          ...devJsonObj,
-          NAMED_FILE_BASE: namedFileBase
-        });
+        allProfiles.push(devJsonObj);
 
         if (i === selectedIndex) {
           selectedProfile = {
@@ -268,29 +267,20 @@ async function main() {
       throw new Error("Failed to generate profiles for any device.");
     }
 
-    const indexData = {
-      updated_at: new Date().toISOString(),
-      total_devices: allProfiles.length,
-      devices: allProfiles.map(p => ({
-        model: p.MODEL,
-        codename: p.DEVICE,
-        product: p.PRODUCT,
-        version_release: p.VERSION_RELEASE,
-        security_patch: p.SECURITY_PATCH,
-        initial_sdk: p.DEVICE_INITIAL_SDK_INT,
-        fingerprint: p.FINGERPRINT,
-        files: {
-          named_json: `pif/${p.NAMED_FILE_BASE}.json`,
-          named_prop: `pif/${p.NAMED_FILE_BASE}.prop`,
-          codename_json: `pif/${p.DEVICE}.json`,
-          codename_prop: `pif/${p.DEVICE}.prop`
-        }
-      }))
-    };
+    // Format flat array super simpel: langsung fetch dan pakai
+    const indexData = allProfiles.map(p => ({
+      name: p.MODEL,
+      codename: p.DEVICE,
+      json: `pif/${p.DEVICE}.json`,
+      prop: `pif/${p.DEVICE}.prop`
+    }));
+
     await writeFile(PIF_INDEX_PATH, JSON.stringify(indexData, null, 2) + "\n", "utf-8");
+    await writeFile(ROOT_INDEX_PATH, JSON.stringify(indexData, null, 2) + "\n", "utf-8");
+    console.log("[INFO] Saved super simple device list to 'pif/index.json' and root 'index.json'.");
 
     const markdownRows = allProfiles.map(p => {
-      return `| ${p.MODEL} | \`${p.DEVICE}\` | ${p.VERSION_RELEASE} | ${p.SECURITY_PATCH} | ${p.DEVICE_INITIAL_SDK_INT} | [JSON](${p.NAMED_FILE_BASE}.json) | [PROP](${p.NAMED_FILE_BASE}.prop) | [\`${p.DEVICE}.json\`](${p.DEVICE}.json) |`;
+      return `| ${p.MODEL} | \`${p.DEVICE}\` | ${p.VERSION_RELEASE} | ${p.SECURITY_PATCH} | ${p.DEVICE_INITIAL_SDK_INT} | [\`${p.DEVICE}.json\`](${p.DEVICE}.json) | [\`${p.DEVICE}.prop\`](${p.DEVICE}.prop) |`;
     }).join("\n");
 
     const readmeContent = [
@@ -299,10 +289,10 @@ async function main() {
       `*Terakhir diperbarui: ${new Date().toISOString()}*`,
       "",
       "Katalog profil Play Integrity Fix (Canary) untuk seluruh perangkat Google Pixel yang terdeteksi.",
-      "Tersedia versi nama model lengkap dipisah underscore (`Pixel_9_Pro_XL_komodo.json`) dan versi codename langsung (`komodo.json`).",
+      "Setiap profil dinamai menggunakan **codename perangkat** (contoh: `mustang.json`, `komodo.json`).",
       "",
-      "| Model | Codename | Android | Security Patch | Initial SDK | Named JSON | Named PROP | Codename JSON |",
-      "| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |",
+      "| Model | Codename | Android | Security Patch | Initial SDK | JSON File | PROP File |",
+      "| :--- | :--- | :--- | :--- | :--- | :--- | :--- |",
       markdownRows,
       "",
       "> Profil flagship utama tetap tersedia di root repository: [`/pif.json`](../pif.json) & [`/pif.prop`](../pif.prop)."
