@@ -1,0 +1,12 @@
+{
+  "MANUFACTURER": "Google",
+  "MODEL": "Pixel 8a",
+  "FINGERPRINT": "google/akita_beta/akita:CANARY/ZP11.260918.007/16484274:user/release-keys",
+  "BRAND": "google",
+  "PRODUCT": "akita_beta",
+  "DEVICE": "akita",
+  "VERSION_RELEASE": "17",
+  "ID": "ZP11.260918.007",
+  "SECURITY_PATCH": "2026-08-05",
+  "DEVICE_INITIAL_SDK_INT": 34
+}
