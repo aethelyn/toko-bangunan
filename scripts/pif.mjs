@@ -454,6 +454,8 @@ async function getOrUpdateSdk(modelName) {
     } catch {
       console.warn("[WARNING] Corrupted sdk_map.json, using defaults.");
     }
+  } else {
+    await writeFile(SDK_MAP_PATH, JSON.stringify(sdkMap, null, 2) + "\n", "utf-8");
   }
 
   let baseKey = "Pixel 10";
