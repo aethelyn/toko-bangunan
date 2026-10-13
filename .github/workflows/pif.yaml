@@ -43,7 +43,8 @@ jobs:
           if git diff --staged --quiet; then
             echo "[INFO] No changes detected in PIF profile. Nothing to commit."
           else
-            git commit -m "chore(pif): update canary profiles for all devices [skip ci]"
+            COMMIT_DATE=$(date -u +'%m-%d-%Y')
+            git commit -m "update pif: ${COMMIT_DATE} [skip ci]"
             git push
             echo "[SUCCESS] New PIF profiles successfully committed to repository."
           fi
