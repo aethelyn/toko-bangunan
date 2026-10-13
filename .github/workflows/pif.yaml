@@ -35,7 +35,10 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
       
-          git add -A pif.json pif.prop sdk_map.json pif/
+          git add -A pif/
+          [ -f pif.json ] && git add pif.json
+          [ -f pif.prop ] && git add pif.prop
+          [ -f sdk_map.json ] && git add sdk_map.json
       
           if git diff --staged --quiet; then
             echo "[INFO] No changes detected in PIF profile. Nothing to commit."
