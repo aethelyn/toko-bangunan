@@ -118,5 +118,11 @@
     "codename": "rango",
     "json": "pif/rango.json",
     "prop": "pif/rango.prop"
+  },
+  {
+    "name": "Pixel 10a",
+    "codename": "stallion",
+    "json": "pif/stallion.json",
+    "prop": "pif/stallion.prop"
   }
 ]
