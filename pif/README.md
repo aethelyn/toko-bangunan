@@ -1,6 +1,6 @@
 # 📱 Android Canary PIF Profiles
 
-*Terakhir diperbarui: 2026-10-13T17:41:01.258Z*
+*Terakhir diperbarui: 2026-10-14T12:51:28.271Z*
 
 Katalog profil Play Integrity Fix (Canary) untuk seluruh perangkat Google Pixel yang terdeteksi.
 Setiap profil dinamai menggunakan **codename perangkat** (contoh: `mustang.json`, `komodo.json`).
