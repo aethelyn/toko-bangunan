@@ -1,4 +1,4 @@
-import { readFile, writeFile, mkdir, rm } from "node:fs/promises";
+import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 
@@ -9,12 +9,12 @@ const PIF_INDEX_PATH = path.join(PIF_DIR, "index.json");
 const ROOT_INDEX_PATH = path.resolve("index.json");
 const PIF_README_PATH = path.join(PIF_DIR, "README.md");
 const SDK_MAP_PATH = path.resolve("sdk_map.json");
+const TS_REGEX = /^\*Last updated:.*\*$/m;
 
 async function main() {
   try {
     console.log("[INFO] Starting PIF Generator pipeline on GitHub Actions...");
 
-    // 1. Fetch halaman versi Android
     console.log("[INFO] Fetching Android versions page...");
     const htmlVersionsRes = await fetch("https://developer.android.com/about/versions");
     const htmlVersions = await htmlVersionsRes.text();
@@ -164,24 +164,7 @@ async function main() {
       throw new Error("Unable to obtain Google Flash Tool API Key.");
     }
 
-    console.log("[INFO] Ensuring 'pif' directory is fresh and cleaning legacy files...");
-    if (existsSync(PIF_DIR)) {
-      await rm(PIF_DIR, { recursive: true, force: true });
-    }
     await mkdir(PIF_DIR, { recursive: true });
-
-    // Clean up legacy devices directory or pif_all.json if exists
-    if (existsSync(path.resolve("devices"))) {
-      await rm(path.resolve("devices"), { recursive: true, force: true });
-    }
-    if (existsSync(path.resolve("pif_all.json"))) {
-      await rm(path.resolve("pif_all.json"), { force: true });
-    }
-    // Hapus file index.html jika pernah terbuat sebelumnya
-    const legacyRootHtml = path.resolve("index.html");
-    if (existsSync(legacyRootHtml)) {
-      await rm(legacyRootHtml, { force: true });
-    }
 
     console.log(`[INFO] Processing all ${modelList.length} devices found...`);
     const allProfiles = [];
@@ -242,7 +225,6 @@ async function main() {
           `DEVICE_INITIAL_SDK_INT=${initialSdk}`
         ].join("\n");
 
-        // Simpan 1 set file per device menggunakan codename resmi (e.g. mustang.json & mustang.prop)
         await writeFile(path.join(PIF_DIR, `${curDevice}.json`), JSON.stringify(devJsonObj, null, 2) + "\n", "utf-8");
         await writeFile(path.join(PIF_DIR, `${curDevice}.prop`), devPropContent + "\n", "utf-8");
 
@@ -267,7 +249,6 @@ async function main() {
       throw new Error("Failed to generate profiles for any device.");
     }
 
-    // Format flat array super simpel: langsung fetch dan pakai
     const indexData = allProfiles.map(p => ({
       name: p.MODEL,
       codename: p.DEVICE,
@@ -283,24 +264,40 @@ async function main() {
       return `| ${p.MODEL} | \`${p.DEVICE}\` | ${p.VERSION_RELEASE} | ${p.SECURITY_PATCH} | ${p.DEVICE_INITIAL_SDK_INT} | [\`${p.DEVICE}.json\`](${p.DEVICE}.json) | [\`${p.DEVICE}.prop\`](${p.DEVICE}.prop) |`;
     }).join("\n");
 
-    const readmeContent = [
+    const buildReadme = (timestampLine) => [
       "# 📱 Android Canary PIF Profiles",
       "",
-      `*Terakhir diperbarui: ${new Date().toISOString()}*`,
+      timestampLine,
       "",
-      "Katalog profil Play Integrity Fix (Canary) untuk seluruh perangkat Google Pixel yang terdeteksi.",
-      "Setiap profil dinamai menggunakan **codename perangkat** (contoh: `mustang.json`, `komodo.json`).",
+      "Catalog of Play Integrity Fix (Canary) profiles for all detected Google Pixel devices.",
+      "Each profile is named after the **device codename** (e.g. `mustang.json`, `komodo.json`).",
       "",
       "| Model | Codename | Android | Security Patch | Initial SDK | JSON File | PROP File |",
       "| :--- | :--- | :--- | :--- | :--- | :--- | :--- |",
       markdownRows,
       "",
-      "> Profil flagship utama tetap tersedia di root repository: [`/pif.json`](../pif.json) & [`/pif.prop`](../pif.prop)."
-    ].join("\n");
-    await writeFile(PIF_README_PATH, readmeContent + "\n", "utf-8");
-    console.log(`[INFO] Saved device catalog index to 'pif/index.json' and markdown overview to 'pif/README.md'.`);
+      "> The main flagship profile is still available at the repository root: [`/pif.json`](../pif.json) & [`/pif.prop`](../pif.prop)."
+    ].join("\n") + "\n";
 
-    // Fallback if selected index failed
+    let previousReadme = null;
+    if (existsSync(PIF_README_PATH)) {
+      previousReadme = await readFile(PIF_README_PATH, "utf-8");
+    }
+
+    const newComparable = buildReadme("").replace(TS_REGEX, "");
+    const oldComparable = previousReadme !== null ? previousReadme.replace(TS_REGEX, "") : null;
+
+    if (oldComparable === newComparable) {
+      console.log("[INFO] README content unchanged, leaving file untouched.");
+    } else {
+      await writeFile(
+        PIF_README_PATH,
+        buildReadme(`*Last updated: ${new Date().toISOString()}*`),
+        "utf-8"
+      );
+      console.log("[INFO] README updated.");
+    }
+
     if (!selectedProfile && allProfiles.length > 0) {
       const fallback = allProfiles[0];
       const fallbackProp = [
@@ -336,12 +333,10 @@ async function main() {
       }
     }
 
-    // Always update root pif.json & pif.prop to match the selected primary device
     await writeFile(PIF_JSON_PATH, selectedProfile.jsonContent + "\n", "utf-8");
     await writeFile(PIF_PROP_PATH, selectedProfile.propContent + "\n", "utf-8");
     console.log(`[INFO] Primary profile set to: ${selectedProfile.model} (${selectedProfile.fingerprint})`);
 
-    // Telegram dispatch: Only 1 device (selected flagship) is sent if updated
     if (existingFingerprint === selectedProfile.fingerprint) {
       console.log("[INFO] Primary device fingerprint unchanged. Skipping Telegram dispatch.");
       return;
