@@ -36,48 +36,24 @@ async function main() {
     const htmlLatestRes = await fetch(latestUrl);
     const htmlLatest = await htmlLatestRes.text();
 
-    let fiUrlMatch = "";
-    const hrefs = htmlLatest.match(/href="[^"]*"/g);
-    if (hrefs) {
-      for (const href of hrefs) {
-        if (href.includes("download") && href.includes("qpr")) {
-          const rawUrl = href.split('"')[1];
-          fiUrlMatch = "https://developer.android.com" + rawUrl;
-          break;
-        }
-      }
-    }
-
-    if (!fiUrlMatch) {
+    const links = [...new Set(
+       (htmlLatest.match(/href="[^"]*qpr\d+\/download(?:-ota)?"/g) ?? []).map(h => h.split('"')[1])
+    )];
+    if (links.length === 0) {
       throw new Error("Failed to find QPR download link.");
     }
+    const qprNum = u => Number(u.match(/qpr(\d+)/)[1]);
+    const topQpr = Math.max(...links.map(qprNum));
 
-    console.log(`[INFO] QPR Detail URL: ${fiUrlMatch}`);
-    const htmlFiRes = await fetch(fiUrlMatch);
-    const htmlFi = await htmlFiRes.text();
-
-    const linesFi = htmlFi.split("\n");
-    const modelList = [];
-    const productList = [];
-
-    for (let i = 0; i < linesFi.length; i++) {
-      const line = linesFi[i];
-      if (line.includes("tr id=")) {
-        const prodMatch = line.match(/tr id="([^"]+)"/);
-        if (prodMatch) {
-          productList.push(prodMatch[1] + "_beta");
-        }
-        if (i + 1 < linesFi.length) {
-          const nextLine = linesFi[i + 1];
-          if (nextLine.includes("td")) {
-            const modelMatch = nextLine.match(/<td>([^<]+)<\/td>/);
-            if (modelMatch) {
-              modelList.push(modelMatch[1].trim());
-            }
-          }
-        }
-      }
+    let best = { models: [], products: [] };
+    for (const u of links.filter(u => qprNum(u) === topQpr)) {
+      console.log(`[INFO] Checking ${u}`);
+      const html = await (await fetch("https://developer.android.com" + u)).text();
+      const d = parseDevices(html);
+      if (d.models.length > best.models.length) best = d;
     }
+    const modelList = best.models;
+    const productList = best.products;
 
     console.log(`[INFO] Successfully extracted ${modelList.length} device models.`);
     if (modelList.length === 0 || productList.length === 0) {
@@ -350,6 +326,20 @@ async function main() {
     console.error("[CRITICAL ERROR]", error);
     process.exit(1);
   }
+}
+
+function parseDevices(html) {
+  const lines = html.split("\n");
+  const models = [], products = [];
+  for (let i = 0; i < lines.length; i++) {
+    const p = lines[i].match(/tr id="([^"]+)"/);
+    if (!p) continue;
+    const m = (lines[i + 1] ?? "").match(/<td>([^<]+)<\/td>/);
+    if (!m) continue;
+    products.push(p[1] + "_beta");
+    models.push(m[1].trim());
+  }
+  return { models, products };
 }
 
 async function resolveSecurityPatch(canaryId) {
