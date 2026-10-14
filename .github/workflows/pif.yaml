@@ -48,3 +48,12 @@ jobs:
             git push
             echo "[SUCCESS] New PIF profiles successfully committed to repository."
           fi
+
+  workflow-keepalive:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Prevent suspension due to inactivity
+        uses: liskin/gh-workflow-keepalive@v1
