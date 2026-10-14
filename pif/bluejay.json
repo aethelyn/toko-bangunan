@@ -5,7 +5,7 @@
   "BRAND": "google",
   "PRODUCT": "bluejay_beta",
   "DEVICE": "bluejay",
-  "VERSION_RELEASE": "17",
+  "VERSION_RELEASE": "16",
   "ID": "ZP11.260918.007",
   "SECURITY_PATCH": "2026-08-05",
   "DEVICE_INITIAL_SDK_INT": 31
