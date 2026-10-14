@@ -5,8 +5,8 @@
   "BRAND": "google",
   "PRODUCT": "tokay_beta",
   "DEVICE": "tokay",
-  "VERSION_RELEASE": "16",
+  "VERSION_RELEASE": "17",
   "ID": "ZP11.260918.007",
-  "SECURITY_PATCH": "2026-08-05",
+  "SECURITY_PATCH": "2026-10-05",
   "DEVICE_INITIAL_SDK_INT": 35
 }

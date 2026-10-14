@@ -1,17 +1,5 @@
 [
   {
-    "name": "Pixel 6",
-    "codename": "oriole",
-    "json": "pif/oriole.json",
-    "prop": "pif/oriole.prop"
-  },
-  {
-    "name": "Pixel 6 Pro",
-    "codename": "raven",
-    "json": "pif/raven.json",
-    "prop": "pif/raven.prop"
-  },
-  {
     "name": "Pixel 6a",
     "codename": "bluejay",
     "json": "pif/bluejay.json",
@@ -118,5 +106,35 @@
     "codename": "rango",
     "json": "pif/rango.json",
     "prop": "pif/rango.prop"
+  },
+  {
+    "name": "Pixel 10a",
+    "codename": "stallion",
+    "json": "pif/stallion.json",
+    "prop": "pif/stallion.prop"
+  },
+  {
+    "name": "Pixel 11",
+    "codename": "cubs",
+    "json": "pif/cubs.json",
+    "prop": "pif/cubs.prop"
+  },
+  {
+    "name": "Pixel 11 Pro",
+    "codename": "grizzly",
+    "json": "pif/grizzly.json",
+    "prop": "pif/grizzly.prop"
+  },
+  {
+    "name": "Pixel 11 Pro XL",
+    "codename": "kodiak",
+    "json": "pif/kodiak.json",
+    "prop": "pif/kodiak.prop"
+  },
+  {
+    "name": "Pixel 11 Pro Fold",
+    "codename": "yogi",
+    "json": "pif/yogi.json",
+    "prop": "pif/yogi.prop"
   }
 ]
