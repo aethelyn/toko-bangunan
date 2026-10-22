@@ -1,120 +1,120 @@
 [
   {
-    "name": "Pixel 6",
+    "name": "Pixel 6",
     "codename": "oriole",
     "json": "pif/oriole.json",
     "prop": "pif/oriole.prop"
   },
   {
-    "name": "Pixel 6 Pro",
+    "name": "Pixel 6 Pro",
     "codename": "raven",
     "json": "pif/raven.json",
     "prop": "pif/raven.prop"
   },
   {
-    "name": "Pixel 6a",
+    "name": "Pixel 6a",
     "codename": "bluejay",
     "json": "pif/bluejay.json",
     "prop": "pif/bluejay.prop"
   },
   {
-    "name": "Pixel 7",
+    "name": "Pixel 7",
     "codename": "panther",
     "json": "pif/panther.json",
     "prop": "pif/panther.prop"
   },
   {
-    "name": "Pixel 7 Pro",
+    "name": "Pixel 7 Pro",
     "codename": "cheetah",
     "json": "pif/cheetah.json",
     "prop": "pif/cheetah.prop"
   },
   {
-    "name": "Pixel 7a",
+    "name": "Pixel 7a",
     "codename": "lynx",
     "json": "pif/lynx.json",
     "prop": "pif/lynx.prop"
   },
   {
-    "name": "Pixel Fold",
+    "name": "Pixel Fold",
     "codename": "felix",
     "json": "pif/felix.json",
     "prop": "pif/felix.prop"
   },
   {
-    "name": "Pixel Tablet",
+    "name": "Pixel Tablet",
     "codename": "tangorpro",
     "json": "pif/tangorpro.json",
     "prop": "pif/tangorpro.prop"
   },
   {
-    "name": "Pixel 8",
+    "name": "Pixel 8",
     "codename": "shiba",
     "json": "pif/shiba.json",
     "prop": "pif/shiba.prop"
   },
   {
-    "name": "Pixel 8 Pro",
+    "name": "Pixel 8 Pro",
     "codename": "husky",
     "json": "pif/husky.json",
     "prop": "pif/husky.prop"
   },
   {
-    "name": "Pixel 8a",
+    "name": "Pixel 8a",
     "codename": "akita",
     "json": "pif/akita.json",
     "prop": "pif/akita.prop"
   },
   {
-    "name": "Pixel 9",
+    "name": "Pixel 9",
     "codename": "tokay",
     "json": "pif/tokay.json",
     "prop": "pif/tokay.prop"
   },
   {
-    "name": "Pixel 9 Pro",
+    "name": "Pixel 9 Pro",
     "codename": "caiman",
     "json": "pif/caiman.json",
     "prop": "pif/caiman.prop"
   },
   {
-    "name": "Pixel 9 Pro XL",
+    "name": "Pixel 9 Pro XL",
     "codename": "komodo",
     "json": "pif/komodo.json",
     "prop": "pif/komodo.prop"
   },
   {
-    "name": "Pixel 9 Pro Fold",
+    "name": "Pixel 9 Pro Fold",
     "codename": "comet",
     "json": "pif/comet.json",
     "prop": "pif/comet.prop"
   },
   {
-    "name": "Pixel 9a",
+    "name": "Pixel 9a",
     "codename": "tegu",
     "json": "pif/tegu.json",
     "prop": "pif/tegu.prop"
   },
   {
-    "name": "Pixel 10",
+    "name": "Pixel 10",
     "codename": "frankel",
     "json": "pif/frankel.json",
     "prop": "pif/frankel.prop"
   },
   {
-    "name": "Pixel 10 Pro",
+    "name": "Pixel 10 Pro",
     "codename": "blazer",
     "json": "pif/blazer.json",
     "prop": "pif/blazer.prop"
   },
   {
-    "name": "Pixel 10 Pro XL",
+    "name": "Pixel 10 Pro XL",
     "codename": "mustang",
     "json": "pif/mustang.json",
     "prop": "pif/mustang.prop"
   },
   {
-    "name": "Pixel 10 Pro Fold",
+    "name": "Pixel 10 Pro Fold",
     "codename": "rango",
     "json": "pif/rango.json",
     "prop": "pif/rango.prop"
