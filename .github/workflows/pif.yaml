@@ -16,12 +16,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Bun (cached)
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-          no-cache: false
-
       - name: Run PIF Generator
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
@@ -29,7 +23,9 @@ jobs:
           THREAD_ID: ${{ secrets.THREAD_ID }}
           FORCE_SPECIFIC_DEVICE: ${{ vars.FORCE_SPECIFIC_DEVICE }}
           FORCED_DEVICE_MODEL: ${{ vars.FORCED_DEVICE_MODEL }}
-        run: bun scripts/pif.js
+        run: |
+          chmod +x ./pif-generator
+          ./pif-generator
 
       - name: Commit and Push Changes
         run: |
@@ -43,6 +39,7 @@ jobs:
           [ -f pif.json ] && git add pif.json
           [ -f pif.prop ] && git add pif.prop
           [ -f sdk_map.json ] && git add sdk_map.json
+          [ -f device_map.json ] && git add device_map.json
           [ -f index.json ] && git add index.json
           [ -f .build-info ] && git add .build-info
 
