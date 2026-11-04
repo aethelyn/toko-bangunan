@@ -16,10 +16,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 20
-        uses: actions/setup-node@v4
+      - name: Setup Bun (cached)
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: 20
+          bun-version: latest
+          no-cache: false
 
       - name: Run PIF Generator
         env:
@@ -28,25 +29,30 @@ jobs:
           THREAD_ID: ${{ secrets.THREAD_ID }}
           FORCE_SPECIFIC_DEVICE: ${{ vars.FORCE_SPECIFIC_DEVICE }}
           FORCED_DEVICE_MODEL: ${{ vars.FORCED_DEVICE_MODEL }}
-        run: node scripts/pif.mjs
+        run: bun scripts/pif.js
 
       - name: Commit and Push Changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-      
+
+          BUILD_ID=$(cat .build-info 2>/dev/null || echo unknown)
+          COMMIT_DATE=$(date -u +'%m-%d-%Y')
+
           git add -A pif/
           [ -f pif.json ] && git add pif.json
           [ -f pif.prop ] && git add pif.prop
           [ -f sdk_map.json ] && git add sdk_map.json
-      
+          [ -f index.json ] && git add index.json
+          [ -f .build-info ] && git add .build-info
+
+          git diff --staged --stat
           if git diff --staged --quiet; then
             echo "[INFO] No changes detected in PIF profile. Nothing to commit."
           else
-            COMMIT_DATE=$(date -u +'%m-%d-%Y')
-            git commit -m "update pif: ${COMMIT_DATE} [skip ci]"
+            git commit -m "update pif: ${BUILD_ID} ${COMMIT_DATE} [skip ci]"
             git push
-            echo "[SUCCESS] New PIF profiles successfully committed to repository."
+            echo "[SUCCESS] New PIF profiles committed (build ${BUILD_ID})."
           fi
 
   workflow-keepalive:
