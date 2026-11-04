@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   generate-pif:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-arm
 
     steps:
       - name: Checkout Repository
